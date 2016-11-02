@@ -2,18 +2,18 @@
 
 class vectorNd {
 public:
-	int n;//벡터의 차원
+	int n;//벡터의 차원의크기
+	//디폴트 생성자
 	vectorNd() {
-		n = 0;
 	}
-
+	//생성자
 	vectorNd(int n_) {
 		n = n_;
 	}
 	
 	int *v; //변수의 크기만큼 동적 할당.  //크기
 	
-	void malloc_a() {
+	void malloc_a() {//n차원 벡터의 크기를 설정해주는 함수
 		v = (int*)malloc(sizeof(int)*n);
 	}
 
@@ -32,7 +32,7 @@ public:
 	int m;
 	vectorNd *vector; 
 	
-	vectorNd result;
+	vectorNd result;//이부분때문에 벡터클래스의 디폴트 생성자가 필요하다.
 	void malloc_ac() {
 		vector=(vectorNd*)malloc(sizeof(vectorNd)*m);
 		result.n = m;
@@ -53,64 +53,48 @@ public:
 
 
 int main() {
-	//4x3 * 3x1 = 4 x 1
-	//(1  2  3)     1
-	//(4  5  6)    *2
-	//(7  8  9)     3
-	//(10 11 12)
-	
-	vectorNd b(5);
-	b.malloc_a();
+	//5x4 * 4x1 = 4 x 1
+	int m = 5;
+	int n = 4;
+	int count = 1;
+	//결과를 저장할 벡터
+	//벡터의 크기만큼 동적할당해준다.
+	vectorNd result(m);
+	result.malloc_a();
 
-	vectorNd a(4);
+	//벡터 a ={1,2,3,4};
+	//벡터 a를 선언하고
+	//벡터 a의 크기를 동적할당한다.
+	vectorNd a(n);
 	a.malloc_a();
-	a.v[0] = 1;
-	a.v[1] = 2;
-	a.v[2] = 3;
-	a.v[3] = 4;
-
+	for (int i = 0; i <  n; i++) {
+		a.v[i] = i + 1;
+	}
+	//매트릭스 선언
+	//매트릭스의 행수는 m(=5)
+	//매트릭수 내부의 m만큼 벡터를 만들어준다.
 	matrix_mxn m_a;
-	m_a.m = 5;
+	m_a.m = m;
 	m_a.malloc_ac();
-	m_a.vector[0].n = a.n;
-	m_a.vector[0].malloc_a();
-	m_a.vector[1].n = a.n;
-	m_a.vector[1].malloc_a();
-	m_a.vector[2].n = a.n;
-	m_a.vector[2].malloc_a();
-	m_a.vector[3].n = a.n;
-	m_a.vector[3].malloc_a();
-	m_a.vector[4].n = a.n;
-	m_a.vector[4].malloc_a();
 
-	m_a.vector[0].v[0] = 1;
-	m_a.vector[0].v[1] = 2;
-	m_a.vector[0].v[2] = 3;
-	m_a.vector[0].v[3] = 4;
-
-	m_a.vector[1].v[0] = 5;
-	m_a.vector[1].v[1] = 6;
-	m_a.vector[1].v[2] = 7;
-	m_a.vector[1].v[3] = 8;
-
-	m_a.vector[2].v[0] = 9;
-	m_a.vector[2].v[1] = 10;
-	m_a.vector[2].v[2] = 11;
-	m_a.vector[2].v[3] = 12;
-
-	m_a.vector[3].v[0] = 13;
-	m_a.vector[3].v[1] = 14;
-	m_a.vector[3].v[2] = 15;
-	m_a.vector[3].v[3] = 16;
-
-	m_a.vector[4].v[0] = 17;
-	m_a.vector[4].v[1] = 18;
-	m_a.vector[4].v[2] = 19;
-	m_a.vector[4].v[3] = 20;
+	//매트릭스 내부의 벡터에 크기를 동적으로 할당해주는 부분
+	for (int i = 0; i < m; i++) {
+		m_a.vector[i].n = n;
+		m_a.vector[i].malloc_a();
+	}
+	////매트릭스 내부의 벡터에 변수를 삽입하는 부분 1~20까지
+	for (int i = 0; i < m; i++) {
+		for (int j = 0; j < n; j++) {
+			m_a.vector[i].v[j] = count++;
+		}
+	}
+	//곱한다!
+	result = m_a*a;
 	
-	b = m_a*a;
-	std::cout << b.v[0] <<" "<< b.v[1]<< " " << b.v[2] << " "<<b.v[3] << " " << b.v[4] << std::endl;
-
+	//결과출력!
+	for (int i = 0; i < m; i++) {
+		std::cout << result.v[i] << " ";
+	}
 
 
 
